@@ -10,7 +10,7 @@ module ApplicationHelper
     params_hash           = {}
     params_hash[name]     = true
     params_hash[:desc]    = params[:desc] == "false" && params[name] ? "true" : "false"
-    params_hash[:ratings] = params[:ratings]
+    params_hash[:ratings] = params[:ratings] || {}
     movies_path(params_hash)
   end
 end
