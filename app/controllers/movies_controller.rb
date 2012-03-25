@@ -9,10 +9,11 @@ class MoviesController < ApplicationController
   def index
     order_param  =  params[:sort_by] || "title"
     order_param  += params[:order] == "desc" ? " DESC" : " ASC"
-    ratings      =  params[:ratings].try(:keys)
+    rating_param =  params[:ratings] || {}
     @movies      =  Movie.order_by(order_param)
-    @movies      =  @movies.filter_on_ratings(ratings) if ratings.present?
-    @all_ratings =  Movie::ALL_RATINGS
+    @movies      =  @movies.filter_on_ratings(rating_param.keys) if rating_param.keys.present?
+    rating_pairs =  Movie::ALL_RATINGS.zip([])
+    @all_ratings =  Hash[rating_pairs].merge(rating_param)
   end
 
   def new
