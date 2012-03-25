@@ -7,9 +7,10 @@ module ApplicationHelper
   end
 
   def movies_url_for_column(name)
-    params_hash         = {}
-    params_hash[name]   = true
-    params_hash[:desc]  = params[:desc] == "false" && params[name] ? "true" : "false"
+    params_hash           = {}
+    params_hash[name]     = true
+    params_hash[:desc]    = params[:desc] == "false" && params[name] ? "true" : "false"
+    params_hash[:ratings] = params[:ratings]
     movies_path(params_hash)
   end
 end

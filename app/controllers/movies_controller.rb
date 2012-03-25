@@ -9,7 +9,8 @@ class MoviesController < ApplicationController
   def index
     order_param = params[:release_date] == "true" ? "release_date" : "title"
     order_param += params[:desc] == "true" ? " DESC" : " ASC"
-    @movies = Movie.order(order_param)
+    @movies = Movie.order(order_param).where( rating: params[:ratings].keys )
+    @all_ratings = Movie::ALL_RATINGS
   end
 
   def new
