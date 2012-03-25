@@ -8,7 +8,7 @@
         = link_to "Movie Title", movies_url_for_column(:title), id: "title_header"
       %th Rating
       %th{ class: css_for_column(:release_date) }
-        = link_to "Release Header", movies_url_for_column(:release_date) , id: "release_header"
+        = link_to "Release Header", movies_url_for_column(:release_date) , id: "release_date_header"
       %th More Info
   %tbody
     - @movies.each do |movie|

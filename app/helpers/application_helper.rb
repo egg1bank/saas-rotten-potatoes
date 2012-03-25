@@ -7,10 +7,9 @@ module ApplicationHelper
   end
 
   def movies_url_for_column(name)
-    desc = request.referrer =~ /desc/
     params_hash         = {}
     params_hash[name]   = true
-    params_hash[:desc]  = params[:desc] == "false" ? "true" : "false"
+    params_hash[:desc]  = params[:desc] == "false" && params[name] ? "true" : "false"
     movies_path(params_hash)
   end
 end
