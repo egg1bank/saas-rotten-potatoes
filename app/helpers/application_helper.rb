@@ -1,16 +1,19 @@
 module ApplicationHelper
-  MOVIES_SORTING_FIELDS = [:name, :release_date]
 
   def css_for_column(name)
-    return "hilite" if params[name] == "true"
-    return "hilite" if !params[:name] && !params[:release_date] && name == :title
+    return "hilite" if params["sort_by"] == name.to_s
+    if !params["sort_by"] && name == :title
+      "hilite"
+    end
   end
 
   def movies_url_for_column(name)
-    params_hash           = {}
-    params_hash[name]     = true
-    params_hash[:desc]    = params[:desc] == "false" && params[name] ? "true" : "false"
-    params_hash[:ratings] = params[:ratings] || {}
+    is_asc_current  = params[:order] == "asc" && params[:sort_by] == name.to_s
+    params_hash     = {
+      sort_by: name,
+      order:   is_asc_current ? "desc" : "asc",
+      ratings: params[:ratings]
+    }
     movies_path(params_hash)
   end
 end
