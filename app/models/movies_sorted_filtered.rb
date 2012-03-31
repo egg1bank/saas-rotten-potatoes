@@ -1,15 +1,12 @@
 class MoviesSortedFiltered
-  def initialize(params)
+  def initialize(movies, params)
+    @movies = movies
     @params = init(params.slice(:sort_by, :order, :filters))
     @params = yield @params if block_given?
   end
 
-  def params_applied
-    @params
-  end
-
   def results
-    @results = Movie.order_by("#{@params[:sort_by]} #{@params[:order]}")
+    @results = @movies.order_by("#{@params[:sort_by]} #{@params[:order]}")
     @params[:filters].keys.each do |key|
       if @params[:filters][key].present?
         @results = @results.send("filter_on_#{key}", @params[:filters][key])

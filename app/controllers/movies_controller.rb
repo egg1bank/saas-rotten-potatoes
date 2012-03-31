@@ -1,4 +1,5 @@
 class MoviesController < ApplicationController
+  helper_method :presenter
 
   def show
     id = params[:id] # retrieve movie ID from URI route
@@ -7,19 +8,7 @@ class MoviesController < ApplicationController
   end
 
   def index
-    redirect_to movies_path(from_session) if from_session
-
-    handler = MoviesSortedFiltered.new(params) do |params|
-      params[:filters][:ratings] = params[:filters].fetch(:ratings){{}}.keys
-      params
-    end
-
-    @movies = handler.results
-
-    rating_pairs = Movie::ALL_RATINGS.zip([])
-    current_ratings = params.fetch(:filters){{}}.fetch(:ratings){{}}
-    @all_ratings = Hash[rating_pairs].merge(current_ratings)
-
+    redirect_to movies_path(from_session) if from_session.present?
     session[:movies_hash] = params.slice(:order, :sort_by, :filters)
   end
 
@@ -53,16 +42,13 @@ class MoviesController < ApplicationController
 
   private
 
-  def setup_sorting_filtering_params
-    sort_by      = params[:sort_by] || "title"
-    order_param  = params[:order]   || "asc"
-    rating_param = params[:ratings] || {}
-    { sort_by: sort_by, order: order_param , ratings: rating_param }
-  end
-
   def from_session
     if session[:movies_hash] && !params[:filters] && !params[:sort_by] && !params[:order]
       session[:movies_hash]
     end
+  end
+
+  def presenter
+    MoviePresenter.new(Movie.scoped, Movie::ALL_RATINGS, params)
   end
 end

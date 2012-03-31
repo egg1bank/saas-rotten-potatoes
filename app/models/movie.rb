@@ -4,6 +4,10 @@ class Movie < ActiveRecord::Base
     order(field)
   end
 
+  def self.ratings
+    ALL_RATINGS
+  end
+
   def self.filter_on_ratings(ratings)
     where( rating: ratings)
   end
