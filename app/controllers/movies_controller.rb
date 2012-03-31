@@ -8,13 +8,19 @@ class MoviesController < ApplicationController
 
   def index
     redirect_to movies_path(from_session) if from_session
-    movies_param = setup_sorting_filtering_params
-    order_clause = "#{movies_param[:sort_by]} #{movies_param[:order]}"
-    @movies      = Movie.order_by(order_clause)
-    @movies      = @movies.filter_on_ratings(movies_param[:ratings].keys) if movies_param[:ratings].keys.size > 0
+
+    handler = MoviesSortedFiltered.new(params) do |params|
+      params[:filters][:ratings] = params[:filters].fetch(:ratings){{}}.keys
+      params
+    end
+
+    @movies = handler.results
+
     rating_pairs = Movie::ALL_RATINGS.zip([])
-    @all_ratings = Hash[rating_pairs].merge(movies_param[:ratings])
-    session[:movies_param] = movies_param
+    current_ratings = params.fetch(:filters){{}}.fetch(:ratings){{}}
+    @all_ratings = Hash[rating_pairs].merge(current_ratings)
+
+    session[:movies_hash] = params.slice(:order, :sort_by, :filters)
   end
 
   def new
@@ -55,8 +61,8 @@ class MoviesController < ApplicationController
   end
 
   def from_session
-    if session[:movies_param] && !params[:ratings] && !params[:sort_by] && !params[:order]
-      session[:movies_param]
+    if session[:movies_hash] && !params[:filters] && !params[:sort_by] && !params[:order]
+      session[:movies_hash]
     end
   end
 end
