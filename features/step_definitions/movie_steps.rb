@@ -29,8 +29,12 @@ When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
   # HINT: use String#split to split up the rating_list, then
   #   iterate over the ratings and reuse the "When I check..." or
   #   "When I uncheck..." steps in lines 89-95 of web_steps.rb
-  rating_list.split(" ").each do |rating|
-    When %{I uncheck "#{rating}"}
+  splitted_ratings(rating_list).each do |rating|
+    if uncheck
+      step(%{I uncheck "filters_ratings_#{rating}"})
+    else
+      step(%{I check "filters_ratings_#{rating}"})
+    end
   end
 end
 
@@ -40,4 +44,46 @@ end
 
 When /^I sort the movies in increasing order of release date$/ do
   click_link "release_date_header"
+end
+
+Then /^I should see movies with ratings: (.*)$/ do |rating_list|
+  ratings = splitted_ratings(rating_list)
+  movies = Movie.filter_on_ratings(ratings)
+  within("#movies") do
+    movies.map(&:title).each do |title|
+      assert page.has_content?(title)
+    end
+  end
+end
+
+Then /^I should see all of the movies$/ do
+  page.has_css?("#movies tr", count: Movie.scoped.size)
+end
+
+Given /^I check none of the ratings$/ do
+  Movie::ALL_RATINGS.each do |r|
+    uncheck_rating(r)
+  end
+end
+
+Given /^I check all of the ratings$/ do
+  Movie::ALL_RATINGS.each do |r|
+    check_rating(r)
+  end
+end
+
+Then /^I should not see movies with ratings: (.*)$/ do |rating_list|
+  ratings = splitted_ratings(rating_list)
+end
+
+def splitted_ratings(ratings)
+  ratings.split(",").map(&:strip)
+end
+
+def uncheck_rating(rating)
+  step(%{I uncheck "filters_ratings_#{rating}"})
+end
+
+def check_rating(rating)
+  step(%{I check "filters_ratings_#{rating}"})
 end

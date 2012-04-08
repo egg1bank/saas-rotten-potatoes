@@ -1,5 +1,5 @@
 Feature: display list of movies filtered by MPAA rating
- 
+
   As a concerned parent
   So that I can quickly browse movies appropriate for my family
   I want to see movies matching only certain MPAA ratings
@@ -20,16 +20,18 @@ Background: movies have been added to database
   | Chicken Run             | G      | 21-Jun-2000  |
 
   And  I am on the RottenPotatoes home page
-  
+
 Scenario: restrict to movies with 'PG' or 'R' ratings
-  # enter step(s) to check the 'PG' and 'R' checkboxes
-  # enter step(s) to uncheck all other checkboxes
-  # enter step to "submit" the search form on the homepage
-  # enter step(s) to ensure that PG and R movies are visible
-  # enter step(s) to ensure that other movies are not visible
+  Given I check the following ratings: PG, R
+  And I uncheck the following ratings: PG-13, G
+  When I press "Refresh"
+  Then I should see movies with ratings: PG, R
+  And I should not see movies with ratings: PG-13, G
 
 Scenario: no ratings selected
-  # see assignment
+  Given I check none of the ratings
+  Then I should see all of the movies
 
 Scenario: all ratings selected
-  # see assignment
+  Given I check all of the ratings
+  Then I should see all of the movies
