@@ -1,0 +1,59 @@
+{
+  "RSpec": {
+    "coverage": {
+    },
+    "timestamp": 1333999315
+  },
+  "Cucumber Features": {
+    "coverage": {
+      "/Users/omartell/Projects/saas/hw2_rottenpotatoes/app/views/presenters/movie_presenter.rb": [
+        1,
+        1,
+        null,
+        1,
+        19,
+        19,
+        19,
+        null,
+        null,
+        1,
+        20,
+        18,
+        7,
+        null,
+        null,
+        null,
+        1,
+        20,
+        20,
+        null,
+        null,
+        18,
+        null,
+        20,
+        null,
+        null,
+        1,
+        9,
+        9,
+        null,
+        8,
+        8,
+        9,
+        null,
+        null,
+        1,
+        10,
+        19,
+        10,
+        null,
+        null,
+        10,
+        null,
+        null,
+        null
+      ]
+    },
+    "timestamp": 1333999330
+  }
+}

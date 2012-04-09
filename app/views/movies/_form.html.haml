@@ -11,4 +11,4 @@
   = f.label :director
   = f.text_field :director
 
-  = f.submit 'Save Changes'
+  =  f.submit movie.persisted? ? "Update Movie Info" : 'Save Changes'
