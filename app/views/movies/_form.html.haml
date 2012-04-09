@@ -1,0 +1,14 @@
+= form_for movie do |f|
+  = f.label :title
+  = f.text_field :title
+
+  = f.label :rating, 'Rating'
+  = f.select :rating, ['G','PG','PG-13','R','NC-17']
+
+  = f.label :release_date, 'Released On'
+  = f.date_select :release_date
+
+  = f.label :director
+  = f.text_field :director
+
+  = f.submit 'Save Changes'

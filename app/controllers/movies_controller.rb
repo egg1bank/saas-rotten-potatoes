@@ -2,12 +2,11 @@ class MoviesController < ApplicationController
   helper_method :presenter, :movie
 
   def show
-    id = params[:id]
-    @movie = Movie.find(id)
+
   end
 
   def index
-    redirect_to movies_path(from_session) if from_session.present?
+    redirect_to movies_path(from_session), notice: flash[:notice] if from_session.present?
     @movies = Movie.scoped
     session[:movies_hash] = params.slice(:order, :sort_by, :filters)
   end
@@ -23,7 +22,7 @@ class MoviesController < ApplicationController
   end
 
   def edit
-    @movie = Movie.find params[:id]
+
   end
 
   def update
@@ -56,7 +55,8 @@ class MoviesController < ApplicationController
   end
 
   def movie
-    Movie.find(params[:id])
+    return Movie.find(params[:id]) if params[:id].present?
+    Movie.new
   end
 
   def presenter
