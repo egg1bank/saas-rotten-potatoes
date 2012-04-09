@@ -1,0 +1,16 @@
+%table#movies
+  %thead
+    %tr
+      %th{ class: presenter.css_for_column(:title) }
+        = link_to "Movie Title", presenter.url_for_column(:title), id: "title_header"
+      %th Rating
+      %th{ class: presenter.css_for_column(:release_date) }
+        = link_to "Release Header", presenter.url_for_column(:release_date) , id: "release_date_header"
+      %th More Info
+  %tbody
+    - presenter.movies.each do |movie|
+      %tr
+        %td= movie.title
+        %td= movie.rating
+        %td= movie.release_date
+        %td= link_to "More about #{movie.title}", movie_path(movie)

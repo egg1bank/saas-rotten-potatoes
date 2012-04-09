@@ -1,19 +1,19 @@
 class MoviesController < ApplicationController
-  helper_method :presenter
+  helper_method :presenter, :movie
 
   def show
-    id = params[:id] # retrieve movie ID from URI route
-    @movie = Movie.find(id) # look up movie by unique ID
-    # will render app/views/movies/show.<extension> by default
+    id = params[:id]
+    @movie = Movie.find(id)
   end
 
   def index
     redirect_to movies_path(from_session) if from_session.present?
+    @movies = Movie.scoped
     session[:movies_hash] = params.slice(:order, :sort_by, :filters)
   end
 
   def new
-    # default: render 'new' template
+
   end
 
   def create
@@ -40,6 +40,13 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
+  def similar
+    @movies = movie.similar
+    if @movies.blank?
+      redirect_to movies_path, notice: "'#{movie.title}' has no director info"
+    end
+  end
+
   private
 
   def from_session
@@ -48,7 +55,11 @@ class MoviesController < ApplicationController
     end
   end
 
+  def movie
+    Movie.find(params[:id])
+  end
+
   def presenter
-    MoviePresenter.new(Movie.scoped, Movie::ALL_RATINGS, params)
+    MoviePresenter.new(@movies, Movie::ALL_RATINGS, params)
   end
 end
